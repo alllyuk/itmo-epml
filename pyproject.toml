@@ -91,22 +91,6 @@ extend-exclude = '''
 )/
 '''
 
-# ===== ISORT Configuration =====
-[tool.isort]
-profile = "black"
-line_length = 88
-known_first_party = ["itmo_epml"]
-skip = [
-    ".venv",
-    "venv",
-    "env",
-    ".git",
-    "__pycache__",
-    "build",
-    "dist",
-]
-skip_gitignore = true
-
 # ===== MYPY Configuration =====
 [tool.mypy]
 python_version = "3.10"

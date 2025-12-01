@@ -2,6 +2,10 @@
 
 Repository of "Engineering practices in Machine Learning" course
 
+## Documentation
+[Отчет](.\REPORT.md)
+
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -39,7 +43,6 @@ pre-commit run --all-files
 
 # Format code
 poetry run black src/ tests/
-poetry run isort src/ tests/
 
 # Lint code
 poetry run ruff check src/ tests/
@@ -66,6 +69,16 @@ itmo-epml/
 ├── Dockerfile
 └── README.md
 ```
+
+### Branching strategies
+
+| Ветка        | Назначение            |
+|--------------|---------------------|
+| main         | Стабильная версия    |
+| develop      | Интеграция фич       |
+| feature/*    | Новый функционал     |
+| hotfix/*     | Срочные исправления  |
+| hw<n>     | Homework humber n  |
 
 ### Docker
 ```bash
