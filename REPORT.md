@@ -25,8 +25,8 @@ pip install copier poetry pre-commit
 git clone https://github.com/alllyuk/itmo-epml-template
 copier copy ./itmo-epml-template/ .
 ```
-![Copier](.\screenshots\copier_querstions.jpg)
-![Copier](.\screenshots\copier_work.jpg)
+![Copier](./screenshots/copier_querstions.jpg)
+![Copier](./screenshots/copier_work.jpg)
 
 ### 1.2 Структура папок
 Создан `README.md` и вся необходимая структура
@@ -74,13 +74,13 @@ poetry install
 poetry shell
 pre-commit install
 ```
-![Shell](.\screenshots\poetry_shell.jpg)
+![Shell](./screenshots/poetry_shell.jpg)
 
 **Запуск:**
 ```bash
 pre-commit run --all-files
 ```
-![Shell](.\screenshots\hooks.jpg)
+![Shell](./screenshots/hooks.jpg)
 
 ### 2.2 Конфигурация инструментов
 
@@ -98,7 +98,7 @@ pre-commit run --all-files
 ```bash
 poetry install
 ```
-![Poetry](.\screenshots\poetry.jpg)
+![Poetry](./screenshots/poetry.jpg)
 
 **Добавление новой зависимости:**
 ```bash
@@ -110,7 +110,7 @@ poetry add --group dev pytest
 ```bash
 poetry run pytest
 ```
-![Poetry](.\screenshots\pytest.jpg)
+![Poetry](./screenshots/pytest.jpg)
 
 ### 3.2 Docker
 
