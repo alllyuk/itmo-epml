@@ -74,10 +74,10 @@ itmo-epml/
 
 | Ветка        | Назначение            |
 |--------------|---------------------|
-| main         | Стабильная версия    |
-| develop      | Интеграция фич       |
-| feature/*    | Новый функционал     |
-| hotfix/*     | Срочные исправления  |
+| main         | Stable version    |
+| develop      | Features integration       |
+| feature/*    | New features     |
+| hotfix/*     | Urgent fixes  |
 | hw<n>     | Homework humber n  |
 
 
