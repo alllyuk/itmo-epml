@@ -80,6 +80,7 @@ itmo-epml/
 | hotfix/*     | Срочные исправления  |
 | hw<n>     | Homework humber n  |
 
+
 ### Docker
 ```bash
 # Build image
@@ -91,3 +92,6 @@ docker run -it itmo_epml
 ### Author
 
 Alexey Kornelyuk
+
+# itmo-epml
+Repository of "Engineering practices in Machine Learning" course
