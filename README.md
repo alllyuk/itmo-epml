@@ -70,7 +70,7 @@ itmo-epml/
 
 ### Branching strategies
 
-| Ветка        | Назначение            |
+| Branch        | Purpose            |
 |--------------|---------------------|
 | main         | Stable version    |
 | develop      | Features integration       |
