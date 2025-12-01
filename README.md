@@ -1,7 +1,7 @@
 Repository of "Engineering practices in Machine Learning" course
 
 ## Documentation
-[Отчет](.\REPORT.md)
+[Отчет](./REPORT.md)
 
 
 ## 🚀 Quick Start
