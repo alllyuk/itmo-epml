@@ -1,0 +1,96 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ===== Virtual Environments =====
+.env
+.venv
+env/
+venv/
+ENV/
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ===== Jupyter =====
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ===== Data Science =====
+# Data files (too large for git)
+data/raw/*
+data/processed/*
+data/external/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/external/.gitkeep
+
+# Model files
+models/*
+!models/.gitkeep
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.onnx
+
+# ===== Logs and Cache =====
+logs/
+*.log
+.cache/
+mlruns/
+wandb/
+outputs/
+
+# ===== Testing =====
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+
+# ===== MyPy =====
+.mypy_cache/
+
+# ===== Ruff =====
+.ruff_cache/
+
+# ===== Secrets =====
+.env
+.env.local
+*.pem
+*.key
+secrets.yaml
+secrets.yml
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== DVC =====
+/dvc.lock
