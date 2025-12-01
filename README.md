@@ -90,6 +90,3 @@ docker run -it itmo_epml
 ### Author
 
 Alexey Kornelyuk
-
-# itmo-epml
-Repository of "Engineering practices in Machine Learning" course
