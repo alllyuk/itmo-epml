@@ -68,7 +68,15 @@ itmo-epml/
 └── README.md
 ```
 
-### Branching strategies
+### Docker
+```bash
+# Build image
+docker build -t itmo_epml .
+# Run container
+docker run -it itmo_epml
+```
+
+## Branching strategies
 
 | Branch        | Purpose            |
 |--------------|---------------------|
@@ -78,15 +86,6 @@ itmo-epml/
 | hotfix/*     | Urgent fixes  |
 | hw<n>     | Homework humber n  |
 
-
-### Docker
-```bash
-# Build image
-docker build -t itmo_epml .
-# Run container
-docker run -it itmo_epml
-```
-
-### Author
+## Author
 
 Alexey Kornelyuk
