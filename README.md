@@ -16,7 +16,7 @@ Repository of "Engineering practices in Machine Learning" course
 
 ```bash
 # Clone repository
-git clone <repository-url>
+git clone https://github.com/alllyuk/itmo-epml
 cd itmo-epml
 
 # Install dependencies
