@@ -66,6 +66,7 @@ itmo_epml/
 - `black` - форматирование кода
 - `ruff` - линтер и форматтер
 - `mypy` - проверка типизации
+- `bandit` - проверка безопасности (security linter)
 - `nbstripout` - очистка Jupyter notebooks
 
 **Установка:**
@@ -89,6 +90,7 @@ pre-commit run --all-files
 - **Ruff:** `line-length=88`, правила `E, W, F, I, B, C4, UP, ARG, SIM`
 - **Black:** `line-length=88`, `target-version=py310`
 - **mypy:** strict mode для типизации
+- **bandit**: исключены тесты (так как используют assert)
 
 ## 3. Управление зависимостями
 

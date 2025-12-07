@@ -42,6 +42,14 @@ repos:
         args: [--ignore-missing-imports]
         exclude: ^(\.venv|venv|env)/
 
+  # Bandit - Security linter
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
+        args: ["-c", "pyproject.toml"]
+        additional_dependencies: ["bandit[toml]"]
+        exclude: ^(\.venv|venv|env|tests)/
 
   # Jupyter notebook cleanup
   - repo: https://github.com/kynan/nbstripout

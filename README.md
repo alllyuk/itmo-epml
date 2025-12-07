@@ -44,6 +44,9 @@ poetry run black src/ tests/
 
 # Lint code
 poetry run ruff check src/ tests/
+
+# Check security
+poetry run bandit -r src/ -c pyproject.toml
 ```
 
 ### Project Structure
@@ -84,7 +87,7 @@ docker run -it itmo_epml
 | develop      | Features integration       |
 | feature/*    | New features     |
 | hotfix/*     | Urgent fixes  |
-| hw<n>     | Homework humber n  |
+| hwN     | Homework humber N  |
 
 ## Author
 
