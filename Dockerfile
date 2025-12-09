@@ -13,7 +13,7 @@ WORKDIR /app
 
 COPY pyproject.toml poetry.lock* ./
 
-RUN poetry install --no-dev
+RUN poetry install
 
 FROM python:3.10-slim as runtime
 
@@ -27,5 +27,7 @@ COPY --from=builder /app/.venv ./.venv
 
 COPY src/ ./src/
 COPY configs/ ./configs/
+COPY data/raw/ ./data/raw/
+COPY .dvc/ ./.dvc/
 
 CMD ["python", "src/itmo_epml/main.py"]
