@@ -158,43 +158,42 @@ class ModelRegistry:
             return pd.DataFrame()
 
 
-def generate_comparison_report(model_name: str, output_path: Optional[str] = None) -> str:
-    """Generate a comparison report for all model versions."""
-    mlflow_dir = Path("mlruns")
-    mlflow.set_tracking_uri(f"file:///{mlflow_dir.absolute()}")
+    def generate_comparison_report(self, model_name: str, output_path: Optional[str] = None) -> str:
+        """Generate a comparison report for all model versions."""
 
-    registry = ModelRegistry()
+        # Get comparison dataframe
+        comparison_df = self.compare_models(model_name)
 
-    # Get comparison dataframe
-    comparison_df = registry.compare_models(model_name)
+        if comparison_df.empty:
+            return f"No model versions found for {model_name}"
 
-    if comparison_df.empty:
-        return f"No model versions found for {model_name}"
+        # Generate report
+        report = f"# Model Comparison Report: {model_name}\n\n"
+        report += comparison_df.to_markdown(index=False) + "\n\n"
 
-    # Generate report
-    report = f"# Model Comparison Report: {model_name}\n\n"
-    report += comparison_df.to_markdown(index=False) + "\n\n"
+        # Find best model
+        best_model = self.get_best_model(model_name, metric="val_accuracy")
+        if best_model:
+            report += "## Best Model\n"
+            for key, value in best_model.items():
+                report += f"- **{key}**: {value}\n"
 
-    # Find best model
-    best_model = registry.get_best_model(model_name, metric="val_accuracy")
-    if best_model:
-        report += "## Best Model\n"
-        for key, value in best_model.items():
-            report += f"- **{key}**: {value}\n"
+        # Save report if path provided
+        if output_path:
+            with open(output_path, "w") as f:
+                f.write(report)
+            logger.info(f"Report saved to {output_path}")
 
-    # Save report if path provided
-    if output_path:
-        with open(output_path, "w") as f:
-            f.write(report)
-        logger.info(f"Report saved to {output_path}")
-
-    return report
+        return report
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
     # Example usage
+    mlflow_dir = Path("mlruns")
+    mlflow.set_tracking_uri(f"file:///{mlflow_dir.absolute()}")
+
     registry = ModelRegistry()
     experiments = registry.list_experiments()
     print("Available Experiments:")

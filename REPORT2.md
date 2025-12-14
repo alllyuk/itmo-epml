@@ -54,7 +54,7 @@ comparison_df = registry.compare_models("housing_price_model")
 best_model = registry.get_best_model("housing_price_model", metric="val_r2")
 
 # Генерация отчета
-report = generate_comparison_report("housing_price_model")
+report = registry.generate_comparison_report("housing_price_model")
 ```
 
 ---
