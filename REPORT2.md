@@ -31,7 +31,7 @@ poetry run dvc add data/raw/train.csv data/raw/test.csv
 
 ### Основные возможности
 
-**Логирование в train.py:**
+**Логирование в main.py:**
 ```python
 mlflow.log_params(params)           # Параметры модели
 mlflow.log_metrics(metrics)         # Метрики (R², MAE, MSE)
@@ -54,26 +54,12 @@ comparison_df = registry.compare_models("housing_price_model")
 best_model = registry.get_best_model("housing_price_model", metric="val_r2")
 
 # Генерация отчета
-report = generate_comparison_report("housing_price_model")
+report = registry.generate_comparison_report("housing_price_model")
 ```
 
 ---
 
-## 3. Воспроизводимость
-
-### Environment Manager (reproducibility.py)
-
-```python
-mgr = ReproducibilityManager()
-
-# Снимок окружения с версиями всех пакетов
-mgr.create_environment_snapshot("environment_snapshot.json")
-
-# Сохранение конфигурации
-mgr.create_training_config(config_dict, "training_config")
-```
-
-### Быстрое воспроизведение
+## 3. Воспроизведение
 
 ```bash
 # Установить зависимости
@@ -97,10 +83,8 @@ poetry run mlflow ui
 ```
 itmo-epml/
 ├── src/itmo_epml/
-│   ├── main.py              # Entry point (координирует pipeline)
-│   ├── train.py             # Обучение с MLflow логированием
+│   ├── main.py             # Обучение с MLflow логированием
 │   ├── model_registry.py    # Управление версиями моделей
-│   └── reproducibility.py   # Утилиты воспроизводимости
 ├── configs/training_config.yaml
 ├── data/raw/
 │   ├── train.csv.dvc        # DVC метаданные

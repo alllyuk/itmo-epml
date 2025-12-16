@@ -104,3 +104,4 @@ dvc_storage/
 # ===== MLflow =====
 mlruns/
 .mlflow
+mlflow.db
