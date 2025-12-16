@@ -2,12 +2,12 @@
 
 import logging
 from pathlib import Path
-from typing import Optional, List, Dict, Any, Union
+from typing import Any, Optional
 
 import mlflow
 import pandas as pd
-from mlflow.tracking import MlflowClient
 from mlflow.entities import ViewType
+from mlflow.tracking import MlflowClient
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +74,9 @@ class ModelRegistry:
                 try:
                     run = self.client.get_run(run_id)
                 except Exception:
-                    logger.warning(f"Run {run_id} not found for version {version.version}")
+                    logger.warning(
+                        f"Run {run_id} not found for version {version.version}"
+                    )
                     continue
 
                 # Get metrics and params
@@ -110,11 +112,8 @@ class ModelRegistry:
             return pd.DataFrame()
 
     def get_best_model(
-            self,
-            model_name: str,
-            metric: str = "val_r2",
-            mode: str = "max"
-        ) -> Optional[Dict[str, Any]]:
+        self, model_name: str, metric: str = "val_r2", mode: str = "max"
+    ) -> Optional[dict[str, Any]]:
         """
         Get best model version based on a metric.
 
@@ -172,7 +171,7 @@ class ModelRegistry:
             experiments = self.client.search_experiments(
                 filter_string=filter_string,
                 view_type=ViewType.ACTIVE_ONLY,
-                order_by=["creation_time DESC"]
+                order_by=["creation_time DESC"],
             )
 
             exp_data = [
@@ -180,7 +179,9 @@ class ModelRegistry:
                     "Experiment ID": exp.experiment_id,
                     "Name": exp.name,
                     "Artifact Location": exp.artifact_location,
-                    "Created": pd.Timestamp(exp.creation_time, unit="ms") if exp.creation_time else None,
+                    "Created": pd.Timestamp(exp.creation_time, unit="ms")
+                    if exp.creation_time
+                    else None,
                 }
                 for exp in experiments
             ]
@@ -193,7 +194,7 @@ class ModelRegistry:
         self,
         experiment_id: str,
         filter_string: str = "",
-        order_by: Optional[List[str]] = None
+        order_by: Optional[list[str]] = None,
     ) -> pd.DataFrame:
         """
         List runs in an experiment with filtering and sorting.
@@ -211,7 +212,7 @@ class ModelRegistry:
             runs = self.client.search_runs(
                 experiment_ids=[experiment_id],
                 filter_string=filter_string,
-                order_by=order_by
+                order_by=order_by,
             )
 
             runs_data = []
@@ -249,7 +250,7 @@ class ModelRegistry:
         experiment_name: Optional[str] = None,
         metric: str = "val_loss",
         ascending: bool = True,
-        top_n: int = 10
+        top_n: int = 10,
     ) -> pd.DataFrame:
         """
         Compare different models (runs) within one experiment.
@@ -295,7 +296,9 @@ class ModelRegistry:
             logger.error(f"Error comparing experiment runs: {e}")
             return pd.DataFrame()
 
-    def generate_comparison_report(self, model_name: str, output_path: Optional[str] = None) -> str:
+    def generate_comparison_report(
+        self, model_name: str, output_path: Optional[str] = None
+    ) -> str:
         """Generate a comparison report for all model versions."""
 
         # Get comparison dataframe
@@ -347,16 +350,20 @@ if __name__ == "__main__":
         runs_df = registry.list_runs(
             experiment_id=exp_id,
             filter_string="metrics.loss < 0.5",
-            order_by=["metrics.loss ASC"]
+            order_by=["metrics.loss ASC"],
         )
-        print(runs_df[["Run ID", "Status", "metric_loss"]].head() if "metric_loss" in runs_df.columns else runs_df.head())
+        print(
+            runs_df[["Run ID", "Status", "metric_loss"]].head()
+            if "metric_loss" in runs_df.columns
+            else runs_df.head()
+        )
 
         # 3. Сравнение всех моделей в эксперименте
         print(f"\n--- Comparing Top Models in Exp {exp_id} ---")
         comparison = registry.compare_experiment_runs(
             experiment_id=exp_id,
             metric="accuracy",
-            ascending=False, # Higher accuracy is better
-            top_n=3
+            ascending=False,  # Higher accuracy is better
+            top_n=3,
         )
         print(comparison)

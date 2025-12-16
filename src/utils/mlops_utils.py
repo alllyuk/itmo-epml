@@ -1,13 +1,14 @@
 import functools
-import time
-import logging
-import mlflow
-from typing import Optional
-from contextlib import contextmanager
 import inspect
+import logging
+import time
+from contextlib import contextmanager
+from typing import Optional
 
+import mlflow
 
 logger = logging.getLogger(__name__)
+
 
 def autolog_params(exclude: Optional[list] = None):
     """
@@ -36,8 +37,11 @@ def autolog_params(exclude: Optional[list] = None):
                 logger.info(f"Autologged params for {func.__name__}: {params_to_log}")
 
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator
+
 
 @contextmanager
 def mlflow_experiment_context(experiment_name: str, run_name: str = None):

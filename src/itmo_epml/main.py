@@ -4,23 +4,21 @@ import argparse
 import logging
 import os
 from pathlib import Path
-from typing import Optional, Tuple, Dict, Any
+from typing import Any, Optional
 
 import mlflow
 import mlflow.sklearn
 import numpy as np
 import pandas as pd
 import yaml
+from dotenv import load_dotenv
+from mlops_utils import autolog_params, mlflow_experiment_context
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.impute import SimpleImputer
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-
-from mlops_utils import autolog_params, mlflow_experiment_context
-
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -28,7 +26,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def load_data(train_path: str, test_path: Optional[str] = None) -> Tuple[pd.DataFrame, Optional[pd.DataFrame]]:
+def load_data(
+    train_path: str, test_path: Optional[str] = None
+) -> tuple[pd.DataFrame, Optional[pd.DataFrame]]:
     """Load training and test data."""
     if not os.path.exists(train_path):
         raise FileNotFoundError(f"Train path {train_path} does not exist")
@@ -43,10 +43,8 @@ def load_data(train_path: str, test_path: Optional[str] = None) -> Tuple[pd.Data
 
 
 def prepare_features(
-    df: pd.DataFrame,
-    target_col: str = "target",
-    is_train: bool = True
-) -> Tuple[pd.DataFrame, Optional[np.ndarray]]:
+    df: pd.DataFrame, target_col: str = "target", is_train: bool = True
+) -> tuple[pd.DataFrame, Optional[np.ndarray]]:
     """Basic feature preparation: Drop IDs, separate Target."""
 
     df_clean = df.copy()
@@ -65,10 +63,8 @@ def prepare_features(
 
 
 def process_features(
-    X_train: pd.DataFrame,
-    X_val: pd.DataFrame,
-    X_test: Optional[pd.DataFrame] = None
-) -> Tuple[pd.DataFrame, pd.DataFrame, Optional[pd.DataFrame], StandardScaler]:
+    X_train: pd.DataFrame, X_val: pd.DataFrame, X_test: Optional[pd.DataFrame] = None
+) -> tuple[pd.DataFrame, pd.DataFrame, Optional[pd.DataFrame], StandardScaler]:
     """
     Process features ensuring.
     1. Encode Categoricals (Fit logic on Train, Apply to Val/Test)
@@ -94,22 +90,17 @@ def process_features(
     X_val_encoded = align_columns(X_val)
     X_test_encoded = align_columns(X_test)
 
-    imputer = SimpleImputer(strategy='mean')
+    imputer = SimpleImputer(strategy="mean")
 
     X_train_imputed = pd.DataFrame(
-        imputer.fit_transform(X_train_encoded),
-        columns=train_cols
+        imputer.fit_transform(X_train_encoded), columns=train_cols
     )
-    X_val_imputed = pd.DataFrame(
-        imputer.transform(X_val_encoded),
-        columns=train_cols
-    )
+    X_val_imputed = pd.DataFrame(imputer.transform(X_val_encoded), columns=train_cols)
 
     X_test_imputed = None
     if X_test_encoded is not None:
         X_test_imputed = pd.DataFrame(
-            imputer.transform(X_test_encoded),
-            columns=train_cols
+            imputer.transform(X_test_encoded), columns=train_cols
         )
 
     scaler = StandardScaler()
@@ -127,6 +118,7 @@ def process_features(
 
     return X_train_final, X_val_final, X_test_final, scaler
 
+
 @autolog_params(exclude=["X_train", "y_train", "X_val", "y_val", "model"])
 def train_model(
     model,
@@ -134,7 +126,7 @@ def train_model(
     y_train: np.ndarray,
     X_val: Optional[pd.DataFrame] = None,
     y_val: Optional[np.ndarray] = None,
-) -> Tuple[Any, Dict[str, float]]:
+) -> tuple[Any, dict[str, float]]:
     """Train ML model and calculate metrics."""
 
     model.fit(X_train, y_train)
@@ -158,9 +150,8 @@ def train_model(
 
 
 def run_training_pipeline(
-        config: Dict[str, Any],
-        use_context: bool = True
-    ) -> Tuple[Any, Dict, str]:
+    config: dict[str, Any], use_context: bool = True
+) -> tuple[Any, dict, str]:
     """Execute training pipeline based on configuration dict."""
 
     # Setup MLflow Config
@@ -181,25 +172,30 @@ def run_training_pipeline(
 
         logger.info(f"Loading data from {config['data']['train_path']}")
         train_df_raw, test_df_raw = load_data(
-            config['data'].get('train_path'),
-            config['data'].get('test_path')
+            config["data"].get("train_path"), config["data"].get("test_path")
         )
 
-        target_col = config['data'].get("target_col", "target")
-        test_size = config['data'].get("test_size", 0.2)
-        random_state = config['data'].get("random_state", 42)
+        target_col = config["data"].get("target_col", "target")
+        test_size = config["data"].get("test_size", 0.2)
+        random_state = config["data"].get("random_state", 42)
 
-        X_full, y_full = prepare_features(train_df_raw, target_col=target_col, is_train=True)
+        X_full, y_full = prepare_features(
+            train_df_raw, target_col=target_col, is_train=True
+        )
 
         X_test_raw = None
         if test_df_raw is not None:
-            X_test_raw, _ = prepare_features(test_df_raw, target_col=target_col, is_train=False)
+            X_test_raw, _ = prepare_features(
+                test_df_raw, target_col=target_col, is_train=False
+            )
 
         X_train_raw, X_val_raw, y_train, y_val = train_test_split(
             X_full, y_full, test_size=test_size, random_state=random_state
         )
 
-        X_train, X_val, X_test, scaler = process_features(X_train_raw, X_val_raw, X_test_raw)
+        X_train, X_val, X_test, scaler = process_features(
+            X_train_raw, X_val_raw, X_test_raw
+        )
 
         model_config = config.get("model", {})
         if "hyperparameters" in model_config:
@@ -207,30 +203,25 @@ def run_training_pipeline(
         else:
             model_params = {k: v for k, v in model_config.items() if k != "type"}
 
-
         logger.info(f"Training model with params: {model_params}")
         mlflow.log_params(model_params)
 
-        if model_config.get('type') == 'RandomForestRegressor':
+        if model_config.get("type") == "RandomForestRegressor":
             model = RandomForestRegressor(**model_params)
-        elif model_config.get('type') == 'LinearRegression':
+        elif model_config.get("type") == "LinearRegression":
             model = LinearRegression(**model_params)
         else:
-            logger.warning(f"Model type {model_config.get('type')} not found. Defaulting to RandomForest.")
+            logger.warning(
+                f"Model type {model_config.get('type')} not found. Defaulting to RandomForest."
+            )
             model = RandomForestRegressor(**model_params)
 
-        model, metrics = train_model(
-            model, X_train, y_train, X_val, y_val
-        )
+        model, metrics = train_model(model, X_train, y_train, X_val, y_val)
 
         logger.info(f"Metrics: {metrics}")
         mlflow.log_metrics(metrics)
 
-        mlflow.sklearn.log_model(
-            model,
-            name="models",
-            input_example=X_train.head(5)
-        )
+        mlflow.sklearn.log_model(model, name="models", input_example=X_train.head(5))
 
         if hasattr(model, "feature_importances_"):
             feature_importance = {
@@ -258,12 +249,12 @@ if __name__ == "__main__":
         "--config",
         type=str,
         default="configs/training_config.yaml",
-        help="Path to configuration YAML file"
+        help="Path to configuration YAML file",
     )
     args = parser.parse_args()
 
     if os.path.exists(args.config):
-        with open(args.config, "r") as f:
+        with open(args.config) as f:
             config = yaml.safe_load(f)
         run_training_pipeline(config)
     else:
