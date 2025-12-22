@@ -87,19 +87,19 @@
 
 ### Сводная таблица экспериментов
 Ниже представлен фрагмент сравнения лучших моделей, отсортированных по метрике `val_r2` (коэффициент детерминации на валидации).
-![Report](./screenshots/report.jpg)
+![Report](../screenshots/report.jpg)
 
 
 ### Скриншоты
 
 **1. Окно экспериментов в MLflow UI:**
-![MLflow Experiments List](./screenshots/mlflow_exps.jpg)
+![MLflow Experiments List](../screenshots/mlflow_exps.jpg)
 
 **2. Окно запусков в MLflow UI:**
-![MLflow Runs List](./screenshots/mlflow_runs.jpg)
+![MLflow Runs List](../screenshots/mlflow_runs.jpg)
 
 **3. Окно моделей в MLflow UI:**
-![MLflow Models List](./screenshots/mlflow_models.jpg)
+![MLflow Models List](../screenshots/mlflow_models.jpg)
 
 **4. Окно сравнения метрик в MLflow UI:**
-![MLflow Compare List](./screenshots/mlflow_compare.jpg)
+![MLflow Compare List](../screenshots/mlflow_compare.jpg)
