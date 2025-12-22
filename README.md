@@ -1,8 +1,8 @@
 Repository of "Engineering practices in Machine Learning" course
 
 ## Documentation
-- [HW Report 1](./REPORT1.md) - Project setup and structure
-- [HW Report 2](./REPORT2.md) - Data and Model Versioning Setup
+- [HW Report 1](./reports/REPORT1.md) - Project setup and structure
+- [HW Report 2](./reports/REPORT2.md) - Data and Model Versioning Setup
 
 
 ## 🚀 Quick Start
