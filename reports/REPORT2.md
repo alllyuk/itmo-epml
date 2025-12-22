@@ -39,8 +39,8 @@ mlflow.sklearn.log_model(model, "model")  # Сама модель
 mlflow.log_dict(metadata, "metadata.json") # Метаданные
 ```
 
-![MLflow](./screenshots/mlflow.jpg)
-![MLflow](./screenshots/experiments.jpg)
+![MLflow](../screenshots/mlflow.jpg)
+![MLflow](../screenshots/experiments.jpg)
 
 ### Управление версиями (model_registry.py)
 
