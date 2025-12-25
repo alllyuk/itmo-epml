@@ -1,0 +1,12 @@
+# @package _global_
+# Baseline experiment configuration
+
+model:
+  n_estimators: 100
+  max_depth: 10
+
+training:
+  cross_validation: false
+
+mlflow:
+  run_name: "baseline_rf"

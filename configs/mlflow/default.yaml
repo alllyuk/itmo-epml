@@ -1,0 +1,12 @@
+# @package mlflow
+tracking_uri: "sqlite:///mlflow.db"
+experiment_name: "House Prices DVC Pipeline"
+run_name: null  # Auto-generated if null
+register_model: true
+model_name: "HousePriceModel"
+
+# Artifact logging
+log_model: true
+log_feature_importance: true
+log_confusion_matrix: false  # For classification
+log_predictions: true

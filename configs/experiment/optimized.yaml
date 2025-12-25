@@ -1,0 +1,14 @@
+# @package _global_
+# Optimized experiment with best hyperparameters
+
+model:
+  n_estimators: 200
+  max_depth: 20
+  min_samples_split: 5
+
+training:
+  cross_validation: true
+  cv_folds: 5
+
+mlflow:
+  run_name: "optimized_rf"

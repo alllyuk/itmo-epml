@@ -1,0 +1,11 @@
+# @package training
+early_stopping: false
+cross_validation: false
+cv_folds: 5
+shuffle: true
+stratify: false
+
+# Callbacks
+save_best_only: true
+monitor_metric: "val_r2"
+mode: "max"  # max for R2, min for MSE and other
