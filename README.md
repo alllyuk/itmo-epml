@@ -4,6 +4,7 @@ Repository of "Engineering practices in Machine Learning" course
 - [HW Report 1](./reports/REPORT1.md) - Project setup and structure
 - [HW Report 2](./reports/REPORT2.md) - Data and Model Versioning Setup
 - [HW Report 3](./reports/REPORT3.md) - Experiment tracking with MLflow
+- [HW Report 4](./reports/REPORT4.md) - ML Pipeline Automation (DVC + Hydra)
 
 
 ## 🚀 Quick Start
@@ -13,6 +14,7 @@ Repository of "Engineering practices in Machine Learning" course
 - Python 3.10+
 - Poetry
 - Git
+- DVC 3.x
 
 ### Installation
 
@@ -29,6 +31,9 @@ poetry shell
 
 # Install pre-commit hooks
 pre-commit install
+
+# Pull DVC data and cache
+dvc pull
 ```
 
 ### Running ML Pipeline
@@ -56,6 +61,26 @@ poetry run dvc push
 
 # View data version history
 poetry run dvc dag
+
+# Run full DVC pipeline
+dvc repro
+```
+
+### Hydra Configuration
+```bash
+# Default run
+python -m src.itmo_epml.run_pipeline
+
+# Specific model
+python -m src.itmo_epml.run_pipeline model=gradient_boosting
+
+# Specific experiment
+python -m src.itmo_epml.run_pipeline experiment=optimized
+
+# Grid Search (multi-run)
+python -m src.itmo_epml.stages.train --multirun \
+    model.n_estimators=50,100,200 \
+    model.max_depth=5,10,20
 ```
 
 ### Running Tests
@@ -81,22 +106,39 @@ poetry run bandit -r src/ -c pyproject.toml
 ### Project Structure
 ```
 itmo-epml/
-├── configs/           # Configuration files (Hydra, etc.)
+├── configs/
+│ ├── config.yaml # Main Hydra config
+│ ├── data/ # Data configs
+│ ├── model/ # Model configs (RF, LR, GB)
+│ ├── training/ # Training configs
+│ ├── mlflow/ # MLflow configs
+│ └── experiment/ # Experiment presets
 ├── data/
-│   ├── raw/          # Original, immutable data
-│   ├── processed/    # Cleaned, transformed data
-│   └── external/     # Data from external sources
-├── models/           # Trained model files
-├── notebooks/        # Jupyter notebooks for exploration
+│ ├── external/
+│ ├── raw/ # Original data
+│ ├── interim/ # Prepared data (DVC cached)
+│ └── processed/ # Final features (DVC cached)
+├── models/ # Trained models and transformers
 ├── reports/
-│   └── figures/      # Generated graphics and figures
+│ ├── figures/ # Plots
+│ ├── monitoring/ # Pipeline execution reports
+│ └── notifications/ # Notification logs
 ├── src/
-│   └── itmo_epml/  # Source code
-├── tests/            # Unit tests
+│ └── itmo_epml/
+│ ├── stages/ # DVC pipeline stages
+│ │ ├── data_prepare.py
+│ │ ├── feature_engineering.py
+│ │ ├── train.py
+│ │ └── evaluate.py
+│ ├── main.py
+│ ├── model_registry.py
+│ ├── monitoring.py
+│ └── notifications.py
+├── tests/
+├── dvc.yaml # DVC pipeline definition
+├── params.yaml # DVC parameters
 ├── .pre-commit-config.yaml
 ├── pyproject.toml
-├── .gitignore
-├── Dockerfile
 └── README.md
 ```
 

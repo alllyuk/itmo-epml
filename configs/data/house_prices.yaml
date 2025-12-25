@@ -1,0 +1,24 @@
+# @package data
+train_path: "data/raw/train.csv"
+test_path: "data/raw/test.csv"
+target_col: "SalePrice"
+test_size: 0.2
+random_state: 42
+
+# Специфичные настройки для House Prices
+drop_columns:
+  - "Id"
+  - "PoolQC"
+  - "MiscFeature"
+  - "Alley"
+  - "Fence"
+
+categorical_features:
+  - "MSZoning"
+  - "Street"
+  - "Neighborhood"
+
+numerical_features:
+  - "LotArea"
+  - "GrLivArea"
+  - "TotalBsmtSF"

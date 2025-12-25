@@ -43,6 +43,7 @@ ENV/
 data/raw/*
 data/processed/*
 data/external/*
+data/interim/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/external/.gitkeep
@@ -105,3 +106,11 @@ dvc_storage/
 mlruns/
 .mlflow
 mlflow.db
+multirun
+
+
+# ===== Run reports =====
+reports/figures
+reports/monitoring
+reports/notifications
+reports/metrics

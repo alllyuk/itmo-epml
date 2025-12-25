@@ -67,7 +67,7 @@ def main():
     print("\n=== Best Model Found ===")
     print(best_model)
 
-    report_path = r"reports\experiment_report.md"
+    report_path = r"reports\metrics\experiment_report.md"
     registry.generate_comparison_report("HousePriceModel", output_path=report_path)
     logger.info(f"Full report saved to {report_path}")
 

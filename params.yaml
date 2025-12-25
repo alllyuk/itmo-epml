@@ -1,0 +1,58 @@
+data:
+  categorical_features:
+  - MSZoning
+  - Street
+  - Neighborhood
+  drop_columns:
+  - Id
+  - PoolQC
+  - MiscFeature
+  - Alley
+  - Fence
+  numerical_features:
+  - LotArea
+  - GrLivArea
+  - TotalBsmtSF
+  random_state: 42
+  target_col: SalePrice
+  test_path: data/raw/test.csv
+  test_size: 0.2
+  train_path: data/raw/train.csv
+debug: false
+mlflow:
+  experiment_name: House Prices DVC Pipeline
+  log_confusion_matrix: false
+  log_feature_importance: true
+  log_model: true
+  log_predictions: true
+  model_name: HousePriceModel
+  register_model: true
+  run_name: null
+  tracking_uri: sqlite:///mlflow.db
+model:
+  _validate:
+    learning_rate:
+      max: 1.0
+      min: 0.001
+    n_estimators:
+      max: 1000
+      min: 10
+  learning_rate: 0.1
+  max_depth: 5
+  min_samples_leaf: 1
+  min_samples_split: 2
+  n_estimators: 100
+  random_state: 42
+  subsample: 0.8
+  type: GradientBoostingRegressor
+project_name: House Prices Prediction
+seed: 42
+training:
+  cross_validation: false
+  cv_folds: 5
+  early_stopping: false
+  mode: max
+  monitor_metric: val_r2
+  save_best_only: true
+  shuffle: true
+  stratify: false
