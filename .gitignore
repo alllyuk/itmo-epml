@@ -63,7 +63,6 @@ models/*
 logs/
 *.log
 .cache/
-mlruns/
 wandb/
 outputs/
 
@@ -93,4 +92,15 @@ secrets.yml
 Thumbs.db
 
 # ===== DVC =====
+# Note: .dvc/config should be committed to git (shared configuration)
+# Ignore DVC cache and temp files
 /dvc.lock
+.dvc/cache
+.dvc/tmp
+.dvc/__pycache__
+/dvc_storage
+dvc_storage/
+
+# ===== MLflow =====
+mlruns/
+.mlflow

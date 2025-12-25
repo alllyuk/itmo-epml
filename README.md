@@ -1,7 +1,8 @@
 Repository of "Engineering practices in Machine Learning" course
 
 ## Documentation
-[HW Report](./REPORT.md)
+- [HW Report 1](./reports/REPORT1.md) - Project setup and structure
+- [HW Report 2](./reports/REPORT2.md) - Data and Model Versioning Setup
 
 
 ## 🚀 Quick Start
@@ -27,6 +28,33 @@ poetry shell
 
 # Install pre-commit hooks
 pre-commit install
+```
+
+### Running ML Pipeline
+```bash
+# Run full training pipeline with MLflow tracking
+poetry run python src/itmo_epml/main.py
+
+# View MLflow dashboard (opens at http://localhost:5000)
+poetry run mlflow ui --backend-store-uri file:///$(pwd)/mlruns
+
+# List model versions and compare
+poetry run python src/itmo_epml/model_registry.py
+```
+
+### Data and Model Versioning
+```bash
+# Initialize/pull data versions
+poetry run dvc pull
+
+# Add new data to versioning
+poetry run dvc add data/raw/yourfile.csv
+
+# Push data versions to remote storage
+poetry run dvc push
+
+# View data version history
+poetry run dvc dag
 ```
 
 ### Running Tests
