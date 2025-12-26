@@ -1,0 +1,28 @@
+# @package clearml
+
+server:
+  web_server: "http://localhost:8080"
+  api_server: "http://localhost:8008"
+  files_server: "http://localhost:8081"
+
+project:
+  name: "House Prices Prediction"
+  description: "ML project for house prices prediction using ClearML"
+
+task:
+  task_type: "training"
+  auto_connect_frameworks: true
+  auto_connect_arg_parser: true
+  auto_resource_monitoring: true
+
+model:
+  framework: "scikit-learn"
+  auto_upload: true
+
+pipeline:
+  name: "HousePricesPipeline"
+  version: "1.0.0"
+  default_queue: "default"
+
+notifications:
+  email: null

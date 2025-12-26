@@ -4,6 +4,7 @@ defaults:
   - model: random_forest
   - training: default
   - mlflow: default
+  - clearml: default
   - _self_
 
 # Hydra configuration

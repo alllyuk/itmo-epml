@@ -24,6 +24,8 @@ dvc-s3 = "^3.2.2"
 mlflow = {extras = ["auth"], version = "^3.7.0"}
 pyyaml = "^6.0.3"
 omegaconf = "^2.3.0"
+clearml = "^2.1.0"
+clearml-agent = "^2.0.6"
 
 
 

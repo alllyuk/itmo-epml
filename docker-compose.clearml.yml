@@ -1,0 +1,120 @@
+services:
+  apiserver:
+    command: apiserver
+    container_name: clearml-apiserver
+    image: clearml/server:latest
+    restart: unless-stopped
+    volumes:
+      - clearml-logs:/var/log/clearml
+      - clearml-config:/opt/clearml/config
+      - clearml-data-fileserver:/mnt/fileserver
+    depends_on:
+      - redis
+      - mongo
+      - elasticsearch
+      - fileserver
+    environment:
+      CLEARML_ELASTIC_SERVICE_HOST: elasticsearch
+      CLEARML_ELASTIC_SERVICE_PORT: 9200
+      CLEARML_MONGODB_SERVICE_HOST: mongo
+      CLEARML_MONGODB_SERVICE_PORT: 27017
+      CLEARML_REDIS_SERVICE_HOST: redis
+      CLEARML_REDIS_SERVICE_PORT: 6379
+      CLEARML_SERVER_DEPLOYMENT_TYPE: linux
+      CLEARML__apiserver__pre_populate__enabled: "true"
+    ports:
+      - "8008:8008"
+    networks:
+      - clearml-network
+
+  webserver:
+    command: webserver
+    container_name: clearml-webserver
+    image: clearml/server:latest
+    restart: unless-stopped
+    volumes:
+      - clearml-logs:/var/log/clearml
+      - clearml-config:/opt/clearml/config
+    depends_on:
+      - apiserver
+    environment:
+      CLEARML_API_DEFAULT_HOST: apiserver
+      CLEARML_API_DEFAULT_PORT: 8008
+      CLEARML_FILES_HOST: fileserver
+      CLEARML_FILES_PORT: 8081
+    ports:
+      - "8080:80"
+    networks:
+      - clearml-network
+
+  fileserver:
+    command: fileserver
+    container_name: clearml-fileserver
+    image: clearml/server:latest
+    restart: unless-stopped
+    volumes:
+      - clearml-logs:/var/log/clearml
+      - clearml-data-fileserver:/mnt/fileserver
+      - clearml-config:/opt/clearml/config
+    ports:
+      - "8081:8081"
+    networks:
+      - clearml-network
+
+  mongo:
+    container_name: clearml-mongo
+    image: mongo:7.0.22
+    restart: unless-stopped
+    volumes:
+      - clearml-data-mongo:/data/db
+      - clearml-data-mongo-config:/data/configdb
+    networks:
+      - clearml-network
+
+  redis:
+    container_name: clearml-redis
+    image: redis:7.4.1
+    restart: unless-stopped
+    networks:
+      - clearml-network
+
+  elasticsearch:
+    container_name: clearml-elastic
+    image: elasticsearch:8.17.0
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - clearml-data-elastic:/usr/share/elasticsearch/data
+    networks:
+      - clearml-network
+
+volumes:
+  clearml-data:
+    driver: local
+  clearml-logs:
+    driver: local
+  clearml-config:
+    driver: local
+  clearml-data-fileserver:
+    driver: local
+  clearml-data-mongo:
+    driver: local
+  clearml-data-mongo-config:
+    driver: local
+  clearml-data-elastic:
+    driver: local
+
+networks:
+  clearml-network:
+    driver: bridge

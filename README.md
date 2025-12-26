@@ -5,6 +5,7 @@ Repository of "Engineering practices in Machine Learning" course
 - [HW Report 2](./reports/REPORT2.md) - Data and Model Versioning Setup
 - [HW Report 3](./reports/REPORT3.md) - Experiment tracking with MLflow
 - [HW Report 4](./reports/REPORT4.md) - ML Pipeline Automation (DVC + Hydra)
+- [HW Report 5](./reports/REPORT5.md) - Full pipeline with ClearML
 
 
 ## 🚀 Quick Start
@@ -81,6 +82,28 @@ python -m src.itmo_epml.run_pipeline experiment=optimized
 python -m src.itmo_epml.stages.train --multirun \
     model.n_estimators=50,100,200 \
     model.max_depth=5,10,20
+```
+
+### ClearML Integration
+
+```bash
+# Start ClearML Server
+docker-compose up -d
+
+# Setup ClearML (after server is running)
+python scripts/setup_clearml.py
+
+# Run pipeline with ClearML tracking
+python scripts/run_clearml_pipeline.py --mode local
+
+# Run grid search experiments
+python scripts/run_clearml_pipeline.py --mode grid --experiments 15
+
+# Compare experiments
+python scripts/compare_experiments.py
+
+# View ClearML dashboard
+open http://localhost:8080
 ```
 
 ### Running Tests
