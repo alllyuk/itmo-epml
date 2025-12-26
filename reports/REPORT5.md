@@ -4,7 +4,7 @@
 
 ```bash
 # Запуск ClearML Server
-docker-compose up -d
+docker compose -f docker-compose.clearml.yml up --build -d
 
 # Установка зависимостей
 poetry add clearml
@@ -30,7 +30,7 @@ open http://localhost:8080
 Используется Docker Compose для развертывания ClearML Server:
 
 ```bash
-docker-compose up -d
+docker compose -f docker-compose.clearml.yml up --build -d
 ```
 
 **Компоненты сервера:**
@@ -218,14 +218,3 @@ itmo-epml/
         ├── experiment_comparison.md
         └── model_comparison.md
 ```
-
-## 6. Скриншоты
-### 6.1 ClearML Dashboard
-
-### 6.2 Experiments View
-
-### 6.3 Experiment Details
-
-### 6.4 Model Registry
-
-### 6.5 Comparison View
