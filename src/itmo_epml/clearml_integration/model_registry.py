@@ -62,16 +62,13 @@ class ClearMLModelRegistry:
             task=task,
             framework=framework,
             name=model_name,
+            tags=tags,
         )
 
-        # Add tags
-        if tags:
-            output_model.set_tags(tags)
-
-        # Add metadata as labels
+        # Add metadata
         if metadata:
-            labels = {str(k): str(v) for k, v in metadata.items()}
-            output_model.update_labels(labels)
+            for k, v in metadata.items():
+                output_model.set_metadata(k, v)
 
         # Upload model
         output_model.update_weights(
@@ -169,7 +166,7 @@ class ClearMLModelRegistry:
                 "model_id": model.id,
                 "name": model.name,
                 "framework": model.framework,
-                "created": model.created,
+                "created": model._get_model_data().created,
                 "published": model.published,
                 "url": model.url,
             }

@@ -128,8 +128,9 @@ class ExperimentTracker:
         self.logger.report_histogram(
             title=title,
             series=series,
-            values=values,
             iteration=iteration,
+            values=values,
+            mode="relative",
         )
 
     def log_artifact(
@@ -195,16 +196,26 @@ class ExperimentTracker:
     ) -> None:
         """Log feature importance as bar chart."""
         # Sort by importance
-        sorted_idx = np.argsort(importances)[::-1][:20]  # Top 20
+        sorted_idx = np.argsort(importances)[::-1]
         sorted_names = [feature_names[i] for i in sorted_idx]
         sorted_values = [importances[i] for i in sorted_idx]
 
-        self.logger.report_bar(
+        # 1. Log as scatter plot (bar-like visualization)
+        x_values = np.arange(len(sorted_values))
+        self.logger.report_scatter2d(
             title=title,
             series="importance",
-            labels=sorted_names,
-            values=sorted_values,
+            scatter=np.column_stack([x_values, sorted_values]),
+            xaxis="Feature Rank",
+            yaxis="Importance",
         )
+
+        # 2. Log as table for detailed inspection
+        df = pd.DataFrame({
+            'feature': sorted_names,
+            'importance': sorted_values
+        })
+        self.log_dataframe(f"{title}_table", df, iteration=0)
 
     def set_tags(self, tags: List[str]) -> None:
         """Add tags to the task."""

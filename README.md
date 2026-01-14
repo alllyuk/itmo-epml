@@ -90,9 +90,6 @@ python -m src.itmo_epml.stages.train --multirun \
 # Start ClearML Server
 docker-compose up -d
 
-# Setup ClearML (after server is running)
-python scripts/setup_clearml.py
-
 # Run pipeline with ClearML tracking
 python scripts/run_clearml_pipeline.py --mode local
 

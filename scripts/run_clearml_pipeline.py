@@ -149,6 +149,7 @@ def run_pipeline_locally(config: dict):
                 "val_r2": train_metrics["val_r2"],
                 "val_mse": train_metrics["val_mse"],
                 "model_type": config["model"]["type"],
+                **model_params,
             },
         )
 
