@@ -24,6 +24,8 @@ dvc-s3 = "^3.2.2"
 mlflow = {extras = ["auth"], version = "^3.7.0"}
 pyyaml = "^6.0.3"
 omegaconf = "^2.3.0"
+clearml = "^2.1.0"
+clearml-agent = "^2.0.6"
 
 
 
@@ -36,6 +38,11 @@ mypy = "^1.8.0"
 black = "^23.12.0"
 isort = "^5.13.0"
 bandit = "^1.7.6"
+
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.6.1"
+mkdocs-material = "^9.7.1"
 
 [build-system]
 requires = ["poetry-core"]
