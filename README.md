@@ -1,185 +1,244 @@
-Repository of "Engineering practices in Machine Learning" course
+# ITMO EPML - House Prices ML Pipeline
 
-## Documentation
-- [HW Report 1](./reports/REPORT1.md) - Project setup and structure
-- [HW Report 2](./reports/REPORT2.md) - Data and Model Versioning Setup
-- [HW Report 3](./reports/REPORT3.md) - Experiment tracking with MLflow
-- [HW Report 4](./reports/REPORT4.md) - ML Pipeline Automation (DVC + Hydra)
-- [HW Report 5](./reports/REPORT5.md) - Full pipeline with ClearML
+[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://alllyuk.github.io/itmo-epml/)
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Poetry](https://img.shields.io/badge/poetry-1.7+-blue.svg)](https://python-poetry.org/)
 
+Репозиторий курса "Engineering practices in Machine Learning" (Инженерные практики в ML).
 
-## 🚀 Quick Start
+**[Полная документация](https://alllyuk.github.io/itmo-epml/)**
 
-### Prerequisites
+## Метрики лучшей модели
+
+| Метрика | Значение |
+|---------|----------|
+| Validation R² | 0.909 |
+| Validation RMSE | 26,405 |
+| Validation MAE | 15,896 |
+| Model | Gradient Boosting |
+
+## Документация
+
+- [HW Report 1](./reports/REPORT1.md) - Настройка проекта и структура
+- [HW Report 2](./reports/REPORT2.md) - Версионирование данных и моделей (DVC)
+- [HW Report 3](./reports/REPORT3.md) - Трекинг экспериментов (MLflow)
+- [HW Report 4](./reports/REPORT4.md) - Автоматизация ML пайплайна (DVC + Hydra)
+- [HW Report 5](./reports/REPORT5.md) - Интеграция с ClearML
+
+## Быстрый старт
+
+### Требования
 
 - Python 3.10+
-- Poetry
+- Poetry 1.7+
 - Git
 - DVC 3.x
+- Docker (опционально)
 
-### Installation
+### Установка
 
 ```bash
-# Clone repository
+# Клонирование репозитория
 git clone https://github.com/alllyuk/itmo-epml
 cd itmo-epml
 
-# Install dependencies
+# Установка зависимостей
 poetry install
 
-# Activate virtual environment
+# Активация окружения
 poetry shell
 
-# Install pre-commit hooks
+# Установка pre-commit hooks
 pre-commit install
 
-# Pull DVC data and cache
+# Загрузка данных через DVC
 dvc pull
 ```
 
-### Running ML Pipeline
+### Запуск ML пайплайна
+
 ```bash
-# Run full training pipeline with MLflow tracking
+# Полный пайплайн через DVC
+dvc repro
+
+# Или с мониторингом
 poetry run python src/itmo_epml/main.py
 
-# View MLflow dashboard (opens at http://localhost:5000)
-poetry run mlflow ui --backend-store-uri file:///$(pwd)/mlruns
-
-# List model versions and compare
-poetry run python src/itmo_epml/model_registry.py
+# Просмотр MLflow dashboard
+poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
 ```
 
-### Data and Model Versioning
+## Воспроизведение результатов
+
+### Шаг 1: Подготовка окружения
+
 ```bash
-# Initialize/pull data versions
-poetry run dvc pull
+# Клонирование и установка
+git clone https://github.com/alllyuk/itmo-epml
+cd itmo-epml
+poetry install
+poetry shell
 
-# Add new data to versioning
-poetry run dvc add data/raw/yourfile.csv
+# Загрузка данных
+dvc pull
+```
 
-# Push data versions to remote storage
-poetry run dvc push
+### Шаг 2: Запуск пайплайна
 
-# View data version history
-poetry run dvc dag
-
-# Run full DVC pipeline
+```bash
+# Воспроизведение полного пайплайна
 dvc repro
+
+# Просмотр метрик
+dvc metrics show
 ```
 
-### Hydra Configuration
+### Шаг 3: Проверка результатов
+
 ```bash
-# Default run
-python -m src.itmo_epml.run_pipeline
+# Тесты
+poetry run pytest
 
-# Specific model
-python -m src.itmo_epml.run_pipeline model=gradient_boosting
+# Метрики
+cat reports/metrics/eval_metrics.json
 
-# Specific experiment
-python -m src.itmo_epml.run_pipeline experiment=optimized
+# MLflow UI
+poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
+```
 
-# Grid Search (multi-run)
+### Воспроизведение конкретного эксперимента
+
+```bash
+# С определёнными параметрами
+python -m src.itmo_epml.run_pipeline \
+    model.n_estimators=200 \
+    model.max_depth=5 \
+    model.learning_rate=0.1
+
+# Grid Search
 python -m src.itmo_epml.stages.train --multirun \
     model.n_estimators=50,100,200 \
     model.max_depth=5,10,20
 ```
 
-### ClearML Integration
+## Локальная документация
 
 ```bash
-# Start ClearML Server
-docker-compose up -d
+# Генерация отчётов об экспериментах
+poetry run python scripts/generate_experiment_reports.py
 
-# Run pipeline with ClearML tracking
+# Запуск сервера документации
+poetry run mkdocs serve
+
+# Сборка статического сайта
+poetry run mkdocs build
+```
+
+## Hydra конфигурация
+
+```bash
+# Запуск с default конфигом
+python -m src.itmo_epml.run_pipeline
+
+# Выбор модели
+python -m src.itmo_epml.run_pipeline model=random_forest
+
+# Выбор эксперимента
+python -m src.itmo_epml.run_pipeline experiment=optimized
+
+# Изменение параметров
+python -m src.itmo_epml.run_pipeline model.n_estimators=200 model.max_depth=10
+```
+
+## ClearML интеграция
+
+```bash
+# Запуск ClearML Server
+docker-compose -f docker-compose.clearml.yml up -d
+
+# Запуск пайплайна с ClearML
 python scripts/run_clearml_pipeline.py --mode local
 
-# Run grid search experiments
+# Grid search
 python scripts/run_clearml_pipeline.py --mode grid --experiments 15
 
-# Compare experiments
+# Сравнение экспериментов
 python scripts/compare_experiments.py
 
-# View ClearML dashboard
+# Веб-интерфейс
 open http://localhost:8080
 ```
 
-### Running Tests
+## Тестирование
+
 ```bash
 poetry run pytest
 ```
 
-### Code Quality
+## Проверка качества кода
+
 ```bash
-# Run all pre-commit hooks
+# Все pre-commit hooks
 pre-commit run --all-files
 
-# Format code
+# Форматирование
 poetry run black src/ tests/
 
-# Lint code
+# Линтинг
 poetry run ruff check src/ tests/
 
-# Check security
+# Проверка безопасности
 poetry run bandit -r src/ -c pyproject.toml
 ```
 
-### Project Structure
+## Структура проекта
+
 ```
 itmo-epml/
-├── configs/
-│ ├── config.yaml # Main Hydra config
-│ ├── data/ # Data configs
-│ ├── model/ # Model configs (RF, LR, GB)
-│ ├── training/ # Training configs
-│ ├── mlflow/ # MLflow configs
-│ └── experiment/ # Experiment presets
+├── src/itmo_epml/          # Исходный код
+│   ├── stages/             # Стадии DVC пайплайна
+│   ├── clearml_integration/ # ClearML интеграция
+│   ├── main.py             # Точка входа
+│   ├── model_registry.py   # Реестр моделей
+│   └── monitoring.py       # Мониторинг
+├── configs/                # Hydra конфигурации
 ├── data/
-│ ├── external/
-│ ├── raw/ # Original data
-│ ├── interim/ # Prepared data (DVC cached)
-│ └── processed/ # Final features (DVC cached)
-├── models/ # Trained models and transformers
+│   ├── raw/                # Исходные данные (DVC)
+│   ├── interim/            # Промежуточные данные
+│   └── processed/          # Обработанные данные
+├── models/                 # Обученные модели
 ├── reports/
-│ ├── figures/ # Plots
-│ ├── monitoring/ # Pipeline execution reports
-│ └── notifications/ # Notification logs
-├── src/
-│ └── itmo_epml/
-│ ├── stages/ # DVC pipeline stages
-│ │ ├── data_prepare.py
-│ │ ├── feature_engineering.py
-│ │ ├── train.py
-│ │ └── evaluate.py
-│ ├── main.py
-│ ├── model_registry.py
-│ ├── monitoring.py
-│ └── notifications.py
-├── tests/
-├── dvc.yaml # DVC pipeline definition
-├── params.yaml # DVC parameters
-├── .pre-commit-config.yaml
-├── pyproject.toml
-└── README.md
+│   ├── metrics/            # JSON метрики
+│   └── figures/            # Визуализации
+├── docs/                   # MkDocs документация
+├── tests/                  # Тесты
+├── scripts/                # Утилиты
+├── dvc.yaml                # DVC пайплайн
+├── params.yaml             # Параметры
+├── mkdocs.yml              # Конфигурация документации
+└── pyproject.toml          # Poetry конфигурация
 ```
 
-### Docker
+## Docker
+
 ```bash
-# Build image
-docker build -t itmo_epml .
-# Run container
-docker run -it itmo_epml
+# Сборка образа
+docker build -t itmo-epml .
+
+# Запуск контейнера
+docker run -it itmo-epml
 ```
 
-## Branching strategies
+## Branching strategy
 
-| Branch        | Purpose            |
-|--------------|---------------------|
-| main         | Stable version    |
-| develop      | Features integration       |
-| feature/*    | New features     |
-| hotfix/*     | Urgent fixes  |
-| hwN     | Homework humber N  |
+| Ветка | Назначение |
+|-------|------------|
+| main | Стабильная версия |
+| develop | Интеграция фич |
+| feature/* | Новые функции |
+| hotfix/* | Срочные исправления |
+| hwN | Домашнее задание N |
 
-## Author
+## Автор
 
 Alexey Kornelyuk
