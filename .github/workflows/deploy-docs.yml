@@ -1,0 +1,114 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+      - hw6
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'reports/**'
+      - 'scripts/generate_experiment_reports.py'
+      - '.github/workflows/deploy-docs.yml'
+  workflow_dispatch:  # Ручной запуск
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  generate-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies for report generation
+        run: |
+          pip install pandas matplotlib seaborn
+
+      - name: Generate experiment reports
+        run: python scripts/generate_experiment_reports.py
+
+      - name: Upload generated reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-reports
+          path: |
+            docs/experiments/comparison.md
+            docs/experiments/best-models.md
+            docs/assets/images/experiments/
+
+  build-docs:
+    needs: generate-reports
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download generated reports
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-reports
+          path: docs/
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install MkDocs and dependencies
+        run: |
+          pip install mkdocs==1.6.1 mkdocs-material==9.5.0 pymdown-extensions
+
+      - name: Prepare documentation structure
+        run: |
+          # Создание директорий
+          mkdir -p docs/reports
+          mkdir -p docs/assets/images
+
+          # Копирование HW отчётов
+          cp reports/REPORT1.md docs/reports/hw1.md
+          cp reports/REPORT2.md docs/reports/hw2.md
+          cp reports/REPORT3.md docs/reports/hw3.md
+          cp reports/REPORT4.md docs/reports/hw4.md
+          cp reports/REPORT5.md docs/reports/hw5.md
+
+          # Копирование скриншотов
+          cp -r screenshots/* docs/assets/images/ 2>/dev/null || true
+
+          # Исправление путей к изображениям в отчётах
+          sed -i 's|\.\./screenshots/|../assets/images/|g' docs/reports/*.md
+          sed -i 's|(../screenshots/|(../assets/images/|g' docs/reports/*.md
+
+      - name: Build documentation
+        run: mkdocs build --strict
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/
+
+  deploy:
+    needs: build-docs
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,121 @@
+site_name: ITMO EPML - House Prices ML Pipeline
+site_description: Документация проекта курса "Инженерные практики в ML"
+site_author: Alexey Kornelyuk
+site_url: https://alllyuk.github.io/itmo-epml/
+
+repo_name: alllyuk/itmo-epml
+repo_url: https://github.com/alllyuk/itmo-epml
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: ru
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.copy
+    - content.code.annotate
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Тёмная тема
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Светлая тема
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search:
+      lang:
+        - ru
+        - en
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: alllyuk
+      repo: itmo-epml
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - tables
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/alllyuk/itmo-epml
+  generator: false
+
+nav:
+  - Главная: index.md
+  - Начало работы:
+    - Установка: getting-started/installation.md
+    - Быстрый старт: getting-started/quickstart.md
+    - Конфигурация: getting-started/configuration.md
+  - ML Pipeline:
+    - Обзор: pipeline/overview.md
+    - Подготовка данных: pipeline/data-preparation.md
+    - Feature Engineering: pipeline/feature-engineering.md
+    - Обучение модели: pipeline/training.md
+    - Оценка модели: pipeline/evaluation.md
+  - Эксперименты:
+    - Обзор: experiments/index.md
+    - Трекинг экспериментов: experiments/tracking.md
+    - Сравнение экспериментов: experiments/comparison.md
+    - Лучшие модели: experiments/best-models.md
+  - Развертывание:
+    - Локальная установка: deployment/local.md
+    - Docker: deployment/docker.md
+    - ClearML Server: deployment/clearml-server.md
+  - Отчеты HW:
+    - HW1 - Настройка проекта: reports/hw1.md
+    - HW2 - Версионирование данных: reports/hw2.md
+    - HW3 - Трекинг экспериментов: reports/hw3.md
+    - HW4 - Автоматизация пайплайна: reports/hw4.md
+    - HW5 - ClearML интеграция: reports/hw5.md
