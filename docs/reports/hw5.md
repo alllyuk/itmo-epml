@@ -18,7 +18,7 @@ docker compose -f docker-compose.clearml.yml up --build -d
 
 Далее создаем credentials: "Settings" -> "Workspace" -> "Create new credentials". Не закрываем эту вкладку с credentials до выполнения следующих двух шагов:
 
-1) Cоздаем файл `.env` в корне проекта (пример: [.env.example](../.env.example)) и туда заносим credentials: `CLEARML_API_ACCESS_KEY` и `CLEARML_API_SECRET_KEY`.
+1) Cоздаем файл `.env` в корне проекта (пример: `.env.example`) и туда заносим credentials: `CLEARML_API_ACCESS_KEY` и `CLEARML_API_SECRET_KEY`.
 
 2) Далее запускаем `poetry run clearml-init`. Вставляем туда конфигурационные данные из ClearML. В директории юзера должен появиться `clearml.conf` файл с аналогичными `.env` данными.
 
